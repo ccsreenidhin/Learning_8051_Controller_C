@@ -1,0 +1,156 @@
+C51 COMPILER V9.02   SERIEL1                                                               01/10/2013 04:00:59 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE SERIEL1
+OBJECT MODULE PLACED IN .\seriel1.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE E:\8051 progms 4m Home\Seriel\seriel1.c BROWSE DEBUG OBJECTEXTEND PRINT(.\s
+                    -eriel1.lst) OBJECT(.\seriel1.obj)
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #define uc unsigned char
+   3          //lcd............
+   4          sbit rs=P1^6;
+   5          sbit en=P1^7;
+   6          void display(uc *str);
+   7          void lcd_data(uc);
+   8          void lcd_ini();
+   9          void lcd_cmd(uc);
+  10          //serielj...................
+  11          void sendString(uc *str);
+  12          //nsigned char recvbyte();
+  13          void sendbyte(uc);
+  14          void delay(unsigned int y);
+  15          void seriel_ini();
+  16          // main.............................................
+  17          void main()
+  18          {
+  19   1      uc mybyte;
+  20   1      delay(20);
+  21   1       P1=0;
+  22   1       P0=0;
+  23   1       lcd_ini();
+  24   1       delay(5);
+  25   1       lcd_cmd(0x80);
+  26   1       display("what");
+  27   1      lcd_ini();
+  28   1       delay(5);
+  29   1       lcd_cmd(0x80);
+  30   1      seriel_ini();
+  31   1      delay(20);
+  32   1      while(1)
+  33   1              {
+  34   2        sendString("who are u");
+  35   2        delay(20);
+  36   2      //        mybyte=recvbyte();
+  37   2      //        lcd_data(mybyte);
+  38   2                
+  39   2              }
+  40   1      }
+*** WARNING C280 IN LINE 19 OF E:\8051 PROGMS 4M HOME\SERIEL\SERIEL1.C: 'mybyte': unreferenced local variable
+  41          
+  42          // lcd fns.........................
+  43                     void lcd_ini()
+  44          {
+  45   1      lcd_cmd(0x01);
+  46   1      delay(20);
+  47   1      lcd_cmd(0x0c);
+  48   1      delay(20);
+  49   1      lcd_cmd(0x38);
+  50   1      delay(20);
+  51   1        lcd_cmd(0x02);   
+  52   1        delay(20);
+  53   1      }
+C51 COMPILER V9.02   SERIEL1                                                               01/10/2013 04:00:59 PAGE 2   
+
+  54          
+  55          void lcd_cmd(uc cmdword)
+  56          {         
+  57   1      rs=0; 
+  58   1      P0=cmdword;
+  59   1      delay(5);
+  60   1      en=1;
+  61   1      delay(20);
+  62   1      en=0;
+  63   1      delay(10);
+  64   1      en=1;
+  65   1      delay(20);
+  66   1      }
+  67          
+  68            void lcd_data(uc databyte)
+  69          {
+  70   1      rs=1;
+  71   1      P0=databyte;
+  72   1      en=1;
+  73   1      delay(20);
+  74   1      en=0;
+  75   1      delay(10);
+  76   1      en=1;
+  77   1      delay(20);
+  78   1      }
+  79          
+  80          void display(uc *str)
+  81          {
+  82   1      delay(10);
+  83   1      while(*str)
+  84   1      {
+  85   2      lcd_data(*str);
+  86   2      delay(10);
+  87   2      str++;
+  88   2      }
+  89   1      }
+  90          // seriel fns..........................
+  91          void seriel_ini()
+  92          {
+  93   1      delay(10);
+  94   1      TMOD=0x20;
+  95   1      SCON=0x50;
+  96   1      TH1=0xFD;
+  97   1      TR1=1;
+  98   1      }
+  99          void sendString(uc *str)
+ 100          {
+ 101   1      delay(10);
+ 102   1      while(*str)
+ 103   1      {
+ 104   2      delay(10);
+ 105   2      sendbyte(*str);
+ 106   2      str++;
+ 107   2      }
+ 108   1      }
+ 109          void sendbyte(uc ch)
+ 110          {
+ 111   1      SBUF=ch;
+ 112   1      delay(20);
+ 113   1      while(!TI);
+ 114   1      TI=0;
+ 115   1      }
+C51 COMPILER V9.02   SERIEL1                                                               01/10/2013 04:00:59 PAGE 3   
+
+ 116          void delay(unsigned int y)
+ 117          {
+ 118   1      unsigned int i,k;
+ 119   1      for(i=0;i<y;i++)
+ 120   1      for(k=0;k<250;k++);
+ 121   1      }
+ 122          //unsigned char recvbyte()
+ 123          //{
+ 124          //while(!RI);
+ 125          //RI=0;
+ 126          //return(SBUF);
+ 127          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    335    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

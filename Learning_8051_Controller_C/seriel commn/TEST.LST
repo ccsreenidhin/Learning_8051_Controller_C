@@ -1,0 +1,82 @@
+C51 COMPILER V9.02   TEST                                                                  04/03/2013 11:05:25 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE TEST
+OBJECT MODULE PLACED IN TEST.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE TEST.C BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2          
+   3          #define uc unsigned char
+   4          void seriel_ini();
+   5          void sendString(uc *str);
+   6          unsigned char recvbyte();
+   7          void sendbyte(uc);
+   8          
+   9          void delay(unsigned int y);
+  10          
+  11           void main()
+  12          {
+  13   1      delay(20);
+  14   1      seriel_ini();
+  15   1      delay(1000);
+  16   1      delay(200);     
+  17   1      
+  18   1      while(1)
+  19   1              {
+  20   2      
+  21   2       sendString("i am jabir...");
+  22   2      
+  23   2              }
+  24   1      }
+  25          // seriel fns..........................
+  26          void seriel_ini()
+  27          {
+  28   1      delay(10);
+  29   1      TMOD=0x20;
+  30   1      SCON=0x50;
+  31   1      //IE=0X92;
+  32   1      TH1=0xFD;
+  33   1      TR1=1;
+  34   1      }
+  35          void sendString(uc *str)
+  36          {
+  37   1      delay(10);
+  38   1      while(*str)
+  39   1      {
+  40   2      delay(1000);
+  41   2      sendbyte(*str);
+  42   2      str++;
+  43   2      }
+  44   1      }
+  45          void sendbyte(uc ch)
+  46          {
+  47   1      SBUF=ch;
+  48   1      delay(20);
+  49   1      while(!TI);
+  50   1      TI=0;
+  51   1      }
+  52          void delay(unsigned int y)
+  53          {
+  54   1      unsigned int i,k;
+  55   1      for(i=0;i<y;i++)
+C51 COMPILER V9.02   TEST                                                                  04/03/2013 11:05:25 PAGE 2   
+
+  56   1      for(k=0;k<250;k++);
+  57   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    159    ----
+   CONSTANT SIZE    =     14    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

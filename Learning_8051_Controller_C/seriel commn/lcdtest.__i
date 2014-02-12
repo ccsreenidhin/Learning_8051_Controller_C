@@ -1,0 +1,1 @@
+"..\lcd new\lcdtest.c" BROWSE DEBUG OBJECTEXTEND PRINT(.\lcdtest.lst) OBJECT(.\lcdtest.obj)
