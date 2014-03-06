@@ -1,0 +1,218 @@
+C51 COMPILER V9.02   ADC007                                                                11/02/2012 18:01:55 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE ADC007
+OBJECT MODULE PLACED IN adc007.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE adc007.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1                   #include<reg52.h>
+   2          #define uc unsigned char
+   3           sbit rs=P2^6;
+   4           sbit en=P2^7;
+   5          sbit start=P3^0;
+   6          sbit eoc=P3^1;
+   7          sbit oe=P3^3;
+   8          sbit buzzer=P2^0;
+   9          
+  10          void sendString(uc *str);
+  11          void lcd_data(uc);
+  12          void lcd_ini();
+  13          void lcd_cmd(uc);
+  14          
+  15          void adcconv(uc gotdata);
+  16          
+  17          void delay(unsigned int y);
+  18          
+  19            void main()
+  20          
+  21           {
+  22   1        unsigned char gotdata;
+  23   1       //P3=0;
+  24   1       P1=0xff;
+  25   1       P0=0;
+  26   1       lcd_ini();
+  27   1       delay(5);
+  28   1       lcd_cmd(0x80);
+  29   1        sendString("hello");
+  30   1       while(1)
+  31   1       {
+  32   2        lcd_cmd(0x80);
+  33   2        lcd_cmd(0xc0);
+  34   2       oe=1;
+  35   2         eoc=1;
+  36   2       start=0;
+  37   2       delay(10);
+  38   2       start=1;
+  39   2       
+  40   2       while(eoc);
+  41   2       oe=0;
+  42   2       delay(5);
+  43   2       gotdata=P1;
+  44   2       adcconv(gotdata);
+  45   2       delay(5);
+  46   2      
+  47   2       }
+  48   1       }
+  49          
+  50          
+  51          
+  52          
+  53          
+  54          
+  55          
+C51 COMPILER V9.02   ADC007                                                                11/02/2012 18:01:55 PAGE 2   
+
+  56          
+  57          //fns.........
+  58            void adcconv(unsigned int go)
+  59            {
+*** WARNING C235 IN LINE 59 OF ADC007.C: parameter 1: different types
+  60   1        unsigned int d,e,f,g,h;
+  61   1        d=go/10;
+  62   1        e=d/100;
+  63   1        f=d%10;
+  64   1        g=d/10;
+  65   1        h=g%10;
+  66   1        lcd_data(e+0x30);
+  67   1        delay(2);
+  68   1        lcd_data(h+0x30);
+  69   1       delay(2);
+  70   1      lcd_data(f+0x30);
+  71   1       delay(2);
+  72   1      // if(d>12)
+  73   1      // {
+  74   1      // buzzer=1;
+  75   1      // delay(100);
+  76   1      // buzzer=0;
+  77   1      // delay(100);
+  78   1      
+  79   1      //  switch(d)
+  80   1      //  {
+  81   1      ////    case 1:
+  82   1      ////    case 2:
+  83   1      ////    case 3:
+  84   1      ////
+  85   1      ////    case 5:
+  86   1      ////             lcd_data(0x38);
+  87   1      ////             lcd_data(0x66);
+  88   1      ////                    delay(2);
+  89   1      ////                    break;
+  90   1      //  
+  91   1      //// at         15 degree rignt
+  92   1      // case 5:
+  93   1      //               lcd_data(0x31);
+  94   1      //               lcd_data(0x35);
+  95   1      //                      lcd_data(0x4c);
+  96   1      //                      delay(2);
+  97   1      //                              break;
+  98   1      // //at          8 degree rignt
+  99   1      // case 6:
+ 100   1      //               lcd_data(0x38);
+ 101   1      //               lcd_data(0x4c);
+ 102   1      //                      delay(2);
+ 103   1      //                              break;
+ 104   1      // //when sensor is level
+ 105   1      //      case 7:
+ 106   1      //
+ 107   1      //               lcd_data(0x30);
+ 108   1      //                              delay(2);
+ 109   1      //                      break;
+ 110   1      // //at 8 degree
+ 111   1      //              case 8:
+ 112   1      // 
+ 113   1      //               lcd_data(0x38);
+ 114   1      //               lcd_data(0x52);
+ 115   1      //                      delay(2);
+ 116   1      //                      break;
+C51 COMPILER V9.02   ADC007                                                                11/02/2012 18:01:55 PAGE 3   
+
+ 117   1      ////at 15 degree left
+ 118   1      //       case 9:
+ 119   1      //               lcd_data(0x31);
+ 120   1      //                         lcd_data(0x35);
+ 121   1      //                                       lcd_data(0x52);
+ 122   1      //                      delay(2);
+ 123   1      //                       break;
+ 124   1      // // at all other degrees towards left and rignt
+ 125   1      //   default:
+ 126   1      //                lcd_data(0x66);
+ 127   1      //                lcd_data(0x61);
+ 128   1      //                lcd_data(0x69);
+ 129   1      //                lcd_data(0x6c);
+ 130   1      //              //  buzzer=1;
+ 131   1      //                delay(2);
+ 132   1      //                break;
+ 133   1      //  }
+ 134   1        }
+ 135          
+ 136                     void lcd_ini()
+ 137          {
+ 138   1      lcd_cmd(0x01);
+ 139   1      delay(20);
+ 140   1      lcd_cmd(0x0c);
+ 141   1      delay(20);
+ 142   1      lcd_cmd(0x38);
+ 143   1      delay(20);
+ 144   1        lcd_cmd(0x02);   
+ 145   1        delay(20);
+ 146   1      }
+ 147          
+ 148          void lcd_cmd(uc cmdword)
+ 149          {         
+ 150   1      rs=0; 
+ 151   1      P0=cmdword;
+ 152   1      delay(5);
+ 153   1      en=1;
+ 154   1      delay(20);
+ 155   1      en=0;
+ 156   1      delay(10);
+ 157   1      en=1;
+ 158   1      delay(20);
+ 159   1      }
+ 160          
+ 161            void lcd_data(uc databyte)
+ 162          {
+ 163   1      rs=1;
+ 164   1      P0=databyte;
+ 165   1      en=1;
+ 166   1      delay(20);
+ 167   1      en=0;
+ 168   1      delay(10);
+ 169   1      en=1;
+ 170   1      delay(20);
+ 171   1      }
+ 172          
+ 173          void sendString(uc *str)
+ 174          {
+ 175   1      delay(10);
+ 176   1      while(*str)
+ 177   1      {
+ 178   2      lcd_data(*str);
+C51 COMPILER V9.02   ADC007                                                                11/02/2012 18:01:55 PAGE 4   
+
+ 179   2      delay(10);
+ 180   2      str++;
+ 181   2      }
+ 182   1      }
+ 183          void delay(unsigned int k)
+ 184          {
+ 185   1      unsigned int i,j;
+ 186   1      for(i=0;i<k;i++)
+ 187   1      for(j=0;j<250;j++);
+ 188   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    364    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
