@@ -1,0 +1,156 @@
+C51 COMPILER V9.02   RTCSERIEL_RECVR                                                       01/04/2005 00:18:55 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE RTCSERIEL_RECVR
+OBJECT MODULE PLACED IN RTCseriel recvr.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE RTCseriel recvr.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1           #include<reg52.h>
+   2            #include<absacc.h>
+   3          #define uc unsigned char
+   4          sbit rs=P3^6;
+   5          sbit e1=P3^7;
+   6           uc mybyte;
+   7          void sendbyte(uc ch);
+   8          //lcd................
+   9          void display(uc *str);
+  10          void lcd_data(uc);
+  11          void delay(unsigned int y);
+  12          void lcd_ini();
+  13          void lcd_cmd(uc);
+  14          
+  15          
+  16          void seriel0()interrupt 4
+  17          { 
+  18   1      if(RI==1)
+  19   1      {
+  20   2       mybyte=SBUF;
+  21   2      //lcd_cmd(0x80);
+  22   2      delay(20);
+  23   2       lcd_data(mybyte);
+  24   2      }
+  25   1      RI=0;
+  26   1      }
+  27          //main..................
+  28          void main()
+  29          {
+  30   1      unsigned char sec,min,hr,day,month,year;
+  31   1      delay(200);
+  32   1      //P2=0;
+  33   1      //P1=0;
+  34   1      lcd_ini();
+  35   1      delay(20);
+  36   1      TMOD=0X20;
+  37   1      TH1=0XFD;
+  38   1      SCON=0X50;
+  39   1      TR1=1;
+  40   1      
+  41   1      //TCON=0x01;
+  42   1      IE=0x92;
+  43   1      lcd_cmd(0x80);
+  44   1      delay(10);
+  45   1      display("hai ");
+  46   1      delay(10);      
+  47   1      
+  48   1      while(1)
+  49   1      {
+  50   2      
+  51   2        }
+  52   1        }
+*** WARNING C280 IN LINE 30 OF RTCSERIEL RECVR.C: 'sec': unreferenced local variable
+*** WARNING C280 IN LINE 30 OF RTCSERIEL RECVR.C: 'min': unreferenced local variable
+*** WARNING C280 IN LINE 30 OF RTCSERIEL RECVR.C: 'hr': unreferenced local variable
+C51 COMPILER V9.02   RTCSERIEL_RECVR                                                       01/04/2005 00:18:55 PAGE 2   
+
+*** WARNING C280 IN LINE 30 OF RTCSERIEL RECVR.C: 'day': unreferenced local variable
+*** WARNING C280 IN LINE 30 OF RTCSERIEL RECVR.C: 'month': unreferenced local variable
+*** WARNING C280 IN LINE 30 OF RTCSERIEL RECVR.C: 'year': unreferenced local variable
+  53          
+  54          void lcd_ini()
+  55          {
+  56   1      lcd_cmd(0x38);             //clear display and memory
+  57   1      delay(10);
+  58   1      lcd_cmd(0x0c);             //display curser off
+  59   1      delay(10);
+  60   1      lcd_cmd(0x01);           //5by 7 fjormat
+  61   1      delay(10);
+  62   1      lcd_cmd(0x02);            //
+  63   1      delay(10);
+  64   1      }
+  65          
+  66          void display(uc *str)
+  67          {
+  68   1      delay(10);
+  69   1      while(*str)
+  70   1      {
+  71   2      lcd_data(*str);
+  72   2      delay(20);
+  73   2      str++;
+  74   2      }
+  75   1      }
+  76          
+  77          void lcd_cmd(uc commandword)
+  78          {
+  79   1      rs=0;
+  80   1      P0=commandword;
+  81   1      delay(20);
+  82   1      e1=1;
+  83   1      delay(20);
+  84   1      e1=0;
+  85   1      delay(20);
+  86   1      e1=1;
+  87   1      }
+  88          void lcd_data(uc ch)
+  89          {
+  90   1      rs=1;
+  91   1      P0=ch;
+  92   1      delay(20);
+  93   1      e1=1;
+  94   1      delay(20);
+  95   1      e1=0;
+  96   1      delay(20);
+  97   1      e1=1;
+  98   1      }
+  99          void delay(unsigned int y)
+ 100          {
+ 101   1      unsigned int i,k;
+ 102   1      for(i=0;i<y;i++)
+ 103   1      for(k=0;k<250;k++);
+ 104   1      
+ 105   1      }
+ 106          
+ 107          
+ 108          //void sendString(uc *str)
+ 109          //{
+ 110          //delay(100);
+ 111          //while(*str)
+C51 COMPILER V9.02   RTCSERIEL_RECVR                                                       01/04/2005 00:18:55 PAGE 3   
+
+ 112          //{
+ 113          //sendbyte(*str);
+ 114          //delay(20);
+ 115          //str++;
+ 116          //}
+ 117          //}
+ 118          //void sendbyte(uc ch)
+ 119          //{
+ 120          //SBUF=ch;
+ 121          //while(!TI);
+ 122          //TI=0;
+ 123          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    296    ----
+   CONSTANT SIZE    =      5    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       9
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  6 WARNING(S),  0 ERROR(S)

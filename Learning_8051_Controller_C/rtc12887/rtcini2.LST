@@ -1,0 +1,58 @@
+C51 COMPILER V9.02   RTCINI2                                                               01/04/2005 18:14:41 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE RTCINI2
+OBJECT MODULE PLACED IN rtcini2.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE rtcini2.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #include<absacc.h>
+   3          #define uc unsigned char
+   4          void delay(unsigned int y);
+   5          
+   6          void main()
+   7          {
+   8   1      delay(400);
+   9   1      XBYTE[10]=0x20; //A
+  10   1      XBYTE[11]=0x83;
+  11   1      XBYTE[0]=0x55;
+  12   1      XBYTE[2]=0x15;
+  13   1      XBYTE[4]=0x10;
+  14   1      XBYTE[7]=0x22;
+  15   1      XBYTE[8]=0x01;
+  16   1      XBYTE[9]=0x13;
+  17   1      //XBYTE[1]=0x00;
+  18   1      //XBYTE[3]=0x55;
+  19   1      //XBYTE[5]=0x14;
+  20   1      XBYTE[11]=0x03;
+  21   1      while(1)
+  22   1      {
+  23   2      P2=0;
+  24   2      delay(100);
+  25   2      P2=0xff;
+  26   2      delay(100);
+  27   2      }
+  28   1      }
+  29          void delay(unsigned int y)
+  30          {
+  31   1      unsigned int i,k;
+  32   1      for(i=0;i<y;i++)
+  33   1      for(k=0;k<250;k++);
+  34   1      
+  35   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    108    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

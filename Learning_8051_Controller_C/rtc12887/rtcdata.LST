@@ -1,0 +1,203 @@
+C51 COMPILER V9.02   RTCDATA                                                               01/04/2005 19:06:12 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE RTCDATA
+OBJECT MODULE PLACED IN rtcdata.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE rtcdata.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1           #include<reg52.h>
+   2            #include<absacc.h>
+   3          #define uc unsigned char
+   4          sbit rs=P1^0;
+   5          sbit e1=P1^1;
+   6          uc valH,valL,i; 
+   7          //lcd................
+   8          void sendString(uc *str);
+   9          void lcd_data(uc);
+  10          void delay(unsigned int y);
+  11          void lcd_ini();
+  12          void lcd_cmd(uc);
+  13          //rtc...............
+  14          void bcdconv(uc val);
+  15          
+  16          //void external0()interrupt 0
+  17          //{ 
+  18          //P1^2==1;
+  19          //for(i=0;i<10;i++)
+  20          //{
+  21          //lcd_cmd(0x01);
+  22          //delay(200);
+  23          //lcd_cmd(0x85);
+  24          //sendString("ALARM");
+  25          //delay(200);
+  26          //}
+  27          //P1^2==0;
+  28          //}
+  29          //main..................
+  30          void main()
+  31          {
+  32   1      unsigned char sec,min,hr,day,month,year;
+  33   1      delay(200);
+  34   1      //P2=0;
+  35   1      //P1=0;
+  36   1      lcd_ini();
+  37   1      delay(20);
+  38   1      //TCON=0x01;
+  39   1      //IE=0x81;
+  40   1      //lcd_cmd(0x80);
+  41   1      //delay(10);
+  42   1      
+  43   1                         //ho0me forst line
+  44   1      while(1)
+  45   1      {
+  46   2      //date display............
+  47   2      //lcd_cmd(0x01);
+  48   2      //lcd_cmd(0x80);
+  49   2      //delay(10);
+  50   2      //sendString("DATE ");
+  51   2      //lcd_cmd(0x85);
+  52   2      //delay(10);            
+  53   2      //day=XBYTE[7];
+  54   2      //bcdconv(day);
+  55   2      // lcd_data(':');
+C51 COMPILER V9.02   RTCDATA                                                               01/04/2005 19:06:12 PAGE 2   
+
+  56   2      //month=XBYTE[8];
+  57   2      //bcdconv(month);
+  58   2      //lcd_data(':');
+  59   2      //year=XBYTE[9];
+  60   2      //bcdconv(year);
+  61   2      //time displayj..................
+  62   2      lcd_cmd(0xc0);
+  63   2      sendString("TIME ");
+  64   2      lcd_cmd(0xC5);
+  65   2      delay(10);
+  66   2      hr=XBYTE[4];
+  67   2      delay(10);
+  68   2      bcdconv(hr);
+  69   2      delay(10);
+  70   2       lcd_data(':');
+  71   2       delay(10);
+  72   2      min=XBYTE[2];
+  73   2      delay(10);
+  74   2      bcdconv(min);
+  75   2      delay(10);
+  76   2      lcd_data(':');
+  77   2      delay(10);
+  78   2      sec=XBYTE[0];
+  79   2      delay(10);
+  80   2      bcdconv(sec);
+  81   2      //if(hr>80)
+  82   2      //{
+  83   2      //lcd_data(' ');
+  84   2      //lcd_data('P');
+  85   2      //}
+  86   2      //else
+  87   2      //{
+  88   2      //lcd_data(' ');
+  89   2      //lcd_data('A');
+  90   2      //}
+  91   2      //lcd_data('M');
+  92   2      }
+  93   1        }
+*** WARNING C280 IN LINE 32 OF RTCDATA.C: 'day': unreferenced local variable
+*** WARNING C280 IN LINE 32 OF RTCDATA.C: 'month': unreferenced local variable
+*** WARNING C280 IN LINE 32 OF RTCDATA.C: 'year': unreferenced local variable
+  94          
+  95          void lcd_ini()
+  96          {
+  97   1      lcd_cmd(0x38);             //clear display and memory
+  98   1      delay(10);
+  99   1      lcd_cmd(0x0c);             //display curser off
+ 100   1      delay(10);
+ 101   1      lcd_cmd(0x01);           //5by 7 fjormat
+ 102   1      delay(10);
+ 103   1      lcd_cmd(0x02);            //
+ 104   1      delay(10);
+ 105   1      }
+ 106          
+ 107          void sendString(uc *str)
+ 108          {
+ 109   1      delay(10);
+ 110   1      while(*str)
+ 111   1      {
+ 112   2      lcd_data(*str);
+ 113   2      delay(10);
+ 114   2      str++;
+C51 COMPILER V9.02   RTCDATA                                                               01/04/2005 19:06:12 PAGE 3   
+
+ 115   2      }
+ 116   1      }
+ 117          
+ 118          void lcd_cmd(uc commandword)
+ 119          {
+ 120   1      rs=0;
+ 121   1      P2=commandword;
+ 122   1      delay(20);
+ 123   1      e1=1;
+ 124   1      delay(20);
+ 125   1      e1=0;
+ 126   1      //delay(20);
+ 127   1      //e1=1;
+ 128   1      }
+ 129          void lcd_data(uc ch)
+ 130          {
+ 131   1      rs=1;
+ 132   1      P2=ch;
+ 133   1      delay(20);
+ 134   1      e1=1;
+ 135   1      delay(20);
+ 136   1      e1=0;
+ 137   1      //delay(20);
+ 138   1      //e1=1;
+ 139   1      }
+ 140          void delay(unsigned int y)
+ 141          {
+ 142   1      unsigned int i,k;
+ 143   1      for(i=0;i<y;i++)
+ 144   1      for(k=0;k<250;k++);
+ 145   1      
+ 146   1      }
+ 147          void bcdconv(uc val)
+ 148          {
+ 149   1      //if(val>0x80)
+ 150   1      //{
+ 151   1      //valH=val&0x10;
+ 152   1      //valH=valH>>4;
+ 153   1      //valH=valH|0x30;
+ 154   1      //lcd_data(valH);
+ 155   1      //
+ 156   1      //valL=val&0x0f;
+ 157   1      //valL=valL|0x30;
+ 158   1      //lcd_data(valL);
+ 159   1      //}
+ 160   1      //
+ 161   1      //else
+ 162   1      //{
+ 163   1      valH=val&0xf0;
+ 164   1      valH=valH>>4;
+ 165   1      valH=valH|0x30;
+ 166   1      lcd_data(valH);
+ 167   1      delay(10);
+ 168   1      valL=val&0x0f;
+ 169   1      valL=valL|0x30;
+ 170   1      lcd_data(valL); 
+ 171   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    302    ----
+   CONSTANT SIZE    =      6    ----
+C51 COMPILER V9.02   RTCDATA                                                               01/04/2005 19:06:12 PAGE 4   
+
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

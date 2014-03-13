@@ -1,0 +1,48 @@
+C51 COMPILER V9.02   RTC_INI                                                               01/01/2005 01:18:20 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE RTC_INI
+OBJECT MODULE PLACED IN rtc ini.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE rtc ini.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #include<absacc.h>
+   3          #define uc unsigned char
+   4          void delay(unsigned int y);
+   5          
+   6          void main()
+   7          {
+   8   1      delay(400);
+   9   1      XBYTE[10]=0x20;
+  10   1      XBYTE[11]=0x83;
+  11   1      XBYTE[0]=0x55;
+  12   1      XBYTE[2]=0x07;
+  13   1      XBYTE[4]=0x17;
+  14   1      XBYTE[7]=0x19;
+  15   1      XBYTE[8]=0x01;
+  16   1      XBYTE[9]=0x13;
+  17   1      XBYTE[11]=0x03;
+  18   1      }
+  19          void delay(unsigned int y)
+  20          {
+  21   1      unsigned int i,k;
+  22   1      for(i=0;i<y;i++)
+  23   1      for(k=0;k<250;k++);
+  24   1      
+  25   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     88    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
