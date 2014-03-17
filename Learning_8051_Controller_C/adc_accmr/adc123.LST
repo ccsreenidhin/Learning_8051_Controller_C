@@ -1,0 +1,190 @@
+C51 COMPILER V9.02   ADC123                                                                01/01/2005 03:51:15 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE ADC123
+OBJECT MODULE PLACED IN adc123.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE adc123.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1           #include<reg52.h>
+   2          #define uc unsigned char
+   3           sbit rs=P3^7;
+   4           sbit en=P3^6;
+   5          sbit start=P0^3;
+   6          sbit eoc=P0^4;
+   7          sbit oe=P0^5;
+   8          
+   9          void sendString(uc *str);
+  10          void lcd_data(uc);
+  11          void lcd_ini();
+  12          void lcd_cmd(uc);
+  13          
+  14          void adcconv(uc gotdata);
+  15          
+  16          void delay(unsigned int y);
+  17          
+  18            void main()
+  19          
+  20           {
+  21   1        unsigned char gotdata;
+  22   1       //P3=0;
+  23   1       P1=0xff;
+  24   1       P2=0;
+  25   1       lcd_ini();
+  26   1       delay(5);
+  27   1       lcd_cmd(0x80);
+  28   1        sendString("hello");
+  29   1       while(1)
+  30   1       {
+  31   2        lcd_cmd(0xc0);
+  32   2       oe=1;
+  33   2         eoc=1;
+  34   2       start=0;
+  35   2       delay(10);
+  36   2       start=1;
+  37   2       
+  38   2       while(eoc);
+  39   2        oe=0;
+  40   2       delay(5);
+  41   2       gotdata=P1;
+  42   2       adcconv(gotdata);
+  43   2       delay(5);
+  44   2      
+  45   2       }
+  46   1       }
+  47          
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+  54          
+  55          //fns.........
+C51 COMPILER V9.02   ADC123                                                                01/01/2005 03:51:15 PAGE 2   
+
+  56            void adcconv(unsigned char go)
+  57            {
+  58   1        unsigned char d,e,f,g,h;
+  59   1        d=go/10;
+  60   1        e=go/100;
+  61   1        h=d%10;
+  62   1        f=go%10;
+  63   1        lcd_data(e+0x30);
+  64   1        delay(2);
+  65   1        lcd_data(h+0x30);
+  66   1       delay(2);
+  67   1      lcd_data(f+0x30);
+  68   1       delay(2);
+  69   1        }
+*** WARNING C280 IN LINE 58 OF ADC123.C: 'g': unreferenced local variable
+  70          //  switch(d)
+  71          //  {
+  72          //      case 1:
+  73          //      case 2:
+  74          //      case 3:
+  75          //      case 4:
+  76          //      case 5:
+  77          //               lcd_data(0x38);
+  78          //                      delay(2);
+  79          //                      break;
+  80          // case 6:
+  81          // case 7:
+  82          // case 8:
+  83          //               lcd_data(0x35);
+  84          //                      delay(2);
+  85          //                              break;
+  86          // case 9:
+  87          // case 10:
+  88          // case 11:
+  89          //               lcd_data(0x32);
+  90          //                      delay(2);
+  91          //                              break;
+  92          // 
+  93          //      case 12:
+  94          //               lcd_data(0x30);
+  95          //                      delay(2);
+  96          //                      break;
+  97          //      case 13:
+  98          //      case 14:
+  99          //      case 15:
+ 100          //               lcd_data(0x34);
+ 101          //                      delay(2);
+ 102          //                      break;
+ 103          //      case 16:
+ 104          //               lcd_data(0x39);
+ 105          //                      delay(2);
+ 106          //                       break;
+ 107          // 
+ 108          //              
+ 109          
+ 110                     void lcd_ini()
+ 111          {
+ 112   1      lcd_cmd(0x01);
+ 113   1      delay(20);
+ 114   1      lcd_cmd(0x0c);
+ 115   1      delay(20);
+ 116   1      lcd_cmd(0x38);
+C51 COMPILER V9.02   ADC123                                                                01/01/2005 03:51:15 PAGE 3   
+
+ 117   1      delay(20);
+ 118   1        lcd_cmd(0x02);   
+ 119   1        delay(20);
+ 120   1      }
+ 121          
+ 122          void lcd_cmd(uc cmdword)
+ 123          {         
+ 124   1      rs=0; 
+ 125   1      P2=cmdword;
+ 126   1      delay(5);
+ 127   1      en=1;
+ 128   1      delay(20);
+ 129   1      en=0;
+ 130   1      delay(10);
+ 131   1      en=1;
+ 132   1      delay(20);
+ 133   1      }
+ 134          
+ 135            void lcd_data(uc databyte)
+ 136          {
+ 137   1      rs=1;
+ 138   1      P2=databyte;
+ 139   1      en=1;
+ 140   1      delay(20);
+ 141   1      en=0;
+ 142   1      delay(10);
+ 143   1      en=1;
+ 144   1      delay(20);
+ 145   1      }
+ 146          
+ 147          void sendString(uc *str)
+ 148          {
+ 149   1      delay(10);
+ 150   1      while(*str)
+ 151   1      {
+ 152   2      lcd_data(*str);
+ 153   2      delay(10);
+ 154   2      str++;
+ 155   2      }
+ 156   1      }
+ 157          void delay(unsigned int k)
+ 158          {
+ 159   1      unsigned int i,j;
+ 160   1      for(i=0;i<k;i++)
+ 161   1      for(j=0;j<250;j++);
+ 162   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    328    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
