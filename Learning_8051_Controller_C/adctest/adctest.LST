@@ -1,0 +1,227 @@
+C51 COMPILER V9.02   ADCTEST                                                               12/19/2012 16:50:48 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE ADCTEST
+OBJECT MODULE PLACED IN adctest.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE adctest.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1                   #include<reg52.h>
+   2          #define uc unsigned char
+   3           
+   4          sbit start=P3^0;
+   5          sbit eoc=P3^1;
+   6          sbit oe=P3^2;
+   7          sbit buzzer=P2^0;
+   8          
+   9          sbit rs=P1^6;
+  10          sbit en=P1^7;
+  11          
+  12          void sendString(uc *str);
+  13          void lcd_data(uc);
+  14          void lcd_ini();
+  15          void lcd_cmd(uc);
+  16          
+  17          //void adcconv(uc gotdata);
+  18          
+  19          void delay(unsigned int y);
+  20          
+  21            void main()
+  22          
+  23           {
+  24   1        unsigned char gotdata;
+  25   1       //P3=0;
+  26   1       P1=0;
+  27   1       P0=0;
+  28   1       lcd_ini();
+  29   1       delay(5);
+  30   1       lcd_cmd(0x80);
+  31   1        sendString("hello");
+  32   1       while(1)
+  33   1       {
+  34   2      //  lcd_cmd(0x80);
+  35   2      //  lcd_cmd(0xc0);
+  36   2      // oe=1;
+  37   2      //   eoc=1;
+  38   2      // start=0;
+  39   2      // delay(10);
+  40   2      // start=1;
+  41   2      // 
+  42   2      // while(eoc);
+  43   2      // oe=0;
+  44   2      // delay(5);
+  45   2      // gotdata=P1;
+  46   2      // adcconv(gotdata);
+  47   2      // delay(5);
+  48   2      
+  49   2       }
+  50   1       }
+*** WARNING C280 IN LINE 24 OF ADCTEST.C: 'gotdata': unreferenced local variable
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.02   ADCTEST                                                               12/19/2012 16:50:48 PAGE 2   
+
+  55          
+  56          
+  57          
+  58          
+  59          //fns.........
+  60          //  void adcconv(unsigned int go)
+  61          //  {
+  62          //  unsigned int d,e,f,g,h;
+  63          //  e=go/100;
+  64          //  d=go/10;
+  65          //    f=d%10;
+  66          //  g=go%100;
+  67          //  h=g%10;
+  68          //  lcd_data(e+0x30);
+  69          //  delay(2);
+  70          //  lcd_data(f+0x30);
+  71          // delay(2);
+  72          //lcd_data(h+0x30);
+  73          // delay(2);
+  74          // while(go>128)
+  75          // {
+  76          // buzzer=1;
+  77          // delay(250);
+  78          // buzzer=0;
+  79          // delay(250);
+  80          // }
+  81          // if(d>12)
+  82          // {
+  83          // buzzer=1;
+  84          // delay(100);
+  85          // buzzer=0;
+  86          // delay(100);
+  87          
+  88          //  switch(d)
+  89          //  {
+  90          ////    case 1:
+  91          ////    case 2:
+  92          ////    case 3:
+  93          ////
+  94          ////    case 5:
+  95          ////             lcd_data(0x38);
+  96          ////             lcd_data(0x66);
+  97          ////                    delay(2);
+  98          ////                    break;
+  99          //  
+ 100          //// at         15 degree rignt
+ 101          // case 5:
+ 102          //               lcd_data(0x31);
+ 103          //               lcd_data(0x35);
+ 104          //                      lcd_data(0x4c);
+ 105          //                      delay(2);
+ 106          //                              break;
+ 107          // //at          8 degree rignt
+ 108          // case 6:
+ 109          //               lcd_data(0x38);
+ 110          //               lcd_data(0x4c);
+ 111          //                      delay(2);
+ 112          //                              break;
+ 113          // //when sensor is level
+ 114          //      case 7:
+ 115          //
+ 116          //               lcd_data(0x30);
+C51 COMPILER V9.02   ADCTEST                                                               12/19/2012 16:50:48 PAGE 3   
+
+ 117          //                              delay(2);
+ 118          //                      break;
+ 119          // //at 8 degree
+ 120          //              case 8:
+ 121          // 
+ 122          //               lcd_data(0x38);
+ 123          //               lcd_data(0x52);
+ 124          //                      delay(2);
+ 125          //                      break;
+ 126          ////at 15 degree left
+ 127          //       case 9:
+ 128          //               lcd_data(0x31);
+ 129          //                         lcd_data(0x35);
+ 130          //                                       lcd_data(0x52);
+ 131          //                      delay(2);
+ 132          //                       break;
+ 133          // // at all other degrees towards left and rignt
+ 134          //   default:
+ 135          //                lcd_data(0x66);
+ 136          //                lcd_data(0x61);
+ 137          //                lcd_data(0x69);
+ 138          //                lcd_data(0x6c);
+ 139          //              //  buzzer=1;
+ 140          //                delay(2);
+ 141          //                break;
+ 142          //  }
+ 143            
+ 144          
+ 145                     void lcd_ini()
+ 146          {
+ 147   1      lcd_cmd(0x01);
+ 148   1      delay(20);
+ 149   1      lcd_cmd(0x0c);
+ 150   1      delay(20);
+ 151   1      lcd_cmd(0x38);
+ 152   1      delay(20);
+ 153   1        lcd_cmd(0x02);   
+ 154   1        delay(20);
+ 155   1      }
+ 156          
+ 157          void lcd_cmd(uc cmdword)
+ 158          {         
+ 159   1      rs=0; 
+ 160   1      P0=cmdword;
+ 161   1      delay(5);
+ 162   1      en=1;
+ 163   1      delay(20);
+ 164   1      en=0;
+ 165   1      delay(10);
+ 166   1      en=1;
+ 167   1      delay(20);
+ 168   1      }
+ 169          
+ 170            void lcd_data(uc databyte)
+ 171          {
+ 172   1      rs=1;
+ 173   1      P0=databyte;
+ 174   1      en=1;
+ 175   1      delay(20);
+ 176   1      en=0;
+ 177   1      delay(10);
+ 178   1      en=1;
+C51 COMPILER V9.02   ADCTEST                                                               12/19/2012 16:50:48 PAGE 4   
+
+ 179   1      delay(20);
+ 180   1      }
+ 181          
+ 182          void sendString(uc *str)
+ 183          {
+ 184   1      delay(10);
+ 185   1      while(*str)
+ 186   1      {
+ 187   2      lcd_data(*str);
+ 188   2      delay(10);
+ 189   2      str++;
+ 190   2      }
+ 191   1      }
+ 192          void delay(unsigned int k)
+ 193          {
+ 194   1      unsigned int i,j;
+ 195   1      for(i=0;i<k;i++)
+ 196   1      for(j=0;j<250;j++);
+ 197   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    211    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
