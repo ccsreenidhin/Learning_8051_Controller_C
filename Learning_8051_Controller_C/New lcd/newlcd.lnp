@@ -1,0 +1,3 @@
+"lcdtest2.obj" 
+TO "newlcd" 
+RAMSIZE(256) 
