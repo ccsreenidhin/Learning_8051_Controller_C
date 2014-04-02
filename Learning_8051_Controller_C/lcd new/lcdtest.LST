@@ -1,0 +1,106 @@
+C51 COMPILER V9.02   LCDTEST                                                               12/19/2012 17:27:34 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE LCDTEST
+OBJECT MODULE PLACED IN lcdtest.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE lcdtest.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1                   #include<reg52.h>
+   2          #define uc unsigned char
+   3           
+   4          
+   5          sbit rs=P3^5;
+   6          sbit en=P3^4;
+   7          
+   8          void sendString(uc *str);
+   9          void lcd_data(uc);
+  10          void lcd_ini();
+  11          void lcd_cmd(uc);
+  12          
+  13          void delay(unsigned int y);
+  14          
+  15            void main()
+  16          
+  17           {
+  18   1      
+  19   1       P3=0;
+  20   1       P2=0;
+  21   1       lcd_ini();
+  22   1       delay(5);
+  23   1       lcd_cmd(0x80);
+  24   1        sendString("hello");
+  25   1       while(1);
+  26   1      }
+  27            
+  28          
+  29                     void lcd_ini()
+  30          {
+  31   1      lcd_cmd(0x01);
+  32   1      delay(20);
+  33   1      lcd_cmd(0x0c);
+  34   1      delay(20);
+  35   1      lcd_cmd(0x38);
+  36   1      delay(20);
+  37   1        lcd_cmd(0x02);   
+  38   1        delay(20);
+  39   1      }
+  40          
+  41          void lcd_cmd(uc cmdword)
+  42          {         
+  43   1      rs=0; 
+  44   1      P2=cmdword;
+  45   1      delay(5);
+  46   1      en=1;
+  47   1      delay(20);
+  48   1      en=0;
+  49   1      delay(10);
+  50   1      en=1;
+  51   1      delay(20);
+  52   1      }
+  53          
+  54            void lcd_data(uc databyte)
+  55          {
+C51 COMPILER V9.02   LCDTEST                                                               12/19/2012 17:27:34 PAGE 2   
+
+  56   1      rs=1;
+  57   1      P2=databyte;
+  58   1      en=1;
+  59   1      delay(20);
+  60   1      en=0;
+  61   1      delay(10);
+  62   1      en=1;
+  63   1      delay(20);
+  64   1      }
+  65          
+  66          void sendString(uc *str)
+  67          {
+  68   1      delay(10);
+  69   1      while(*str)
+  70   1      {
+  71   2      lcd_data(*str);
+  72   2      delay(10);
+  73   2      str++;
+  74   2      }
+  75   1      }
+  76          void delay(unsigned int k)
+  77          {
+  78   1      unsigned int i,j;
+  79   1      for(i=0;i<k;i++)
+  80   1      for(j=0;j<250;j++);
+  81   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    211    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

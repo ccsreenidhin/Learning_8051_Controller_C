@@ -1,0 +1,152 @@
+C51 COMPILER V9.02   ADC123                                                                10/31/2012 00:34:09 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE ADC123
+OBJECT MODULE PLACED IN adc123.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE adc123.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1           #include<reg52.h>
+   2          #define uc unsigned char
+   3           sbit rs=P3^6;
+   4           sbit en=P3^7;
+   5          sbit start=P3^0;
+   6          sbit eoc=P3^1;
+   7          sbit oe=P3^2;
+   8          
+   9          void sendString(uc *str);
+  10          void lcd_data(uc);
+  11          void lcd_ini();
+  12          void lcd_cmd(uc);
+  13          
+  14          void adcconv(uc gotdata);
+  15          
+  16          void delay(unsigned int y);
+  17          
+  18            void main()
+  19          
+  20           {
+  21   1        unsigned char gotdata;
+  22   1       P3=0;
+  23   1       P1=0xff;
+  24   1       P2=0;
+  25   1       lcd_ini();
+  26   1       delay(5);
+  27   1       lcd_cmd(0x80);
+  28   1        sendString("hello");
+  29   1       while(1)
+  30   1       {
+  31   2        lcd_cmd(0xc0);
+  32   2       oe=1;
+  33   2         eoc=1;
+  34   2       start=0;
+  35   2       delay(10);
+  36   2       start=1;
+  37   2       
+  38   2       while(eoc);
+  39   2       oe=0;
+  40   2       delay(5);
+  41   2       gotdata=P1;
+  42   2       adcconv(gotdata);
+  43   2       delay(5);
+  44   2      
+  45   2       }
+  46   1       }
+  47          
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+  54          
+  55          //fns.........
+C51 COMPILER V9.02   ADC123                                                                10/31/2012 00:34:09 PAGE 2   
+
+  56            void adcconv(unsigned int go)
+  57            {
+*** WARNING C235 IN LINE 57 OF ADC123.C: parameter 1: different types
+  58   1        unsigned int d,e,f,g,h;
+  59   1        d=go;
+  60   1        e=d/100;
+  61   1        f=d%10;
+  62   1        g=d/10;
+  63   1        h=g%10;
+  64   1        lcd_data(e+0x30);
+  65   1        delay(2);
+  66   1        lcd_data(h+0x30);
+  67   1       delay(2);
+  68   1      lcd_data(f+0x30);
+  69   1       delay(2);
+  70   1        }
+  71          
+  72                     void lcd_ini()
+  73          {
+  74   1      lcd_cmd(0x01);
+  75   1      delay(20);
+  76   1      lcd_cmd(0x0c);
+  77   1      delay(20);
+  78   1      lcd_cmd(0x38);
+  79   1      delay(20);
+  80   1        lcd_cmd(0x02);   
+  81   1        delay(20);
+  82   1      }
+  83          
+  84          void lcd_cmd(uc cmdword)
+  85          {         
+  86   1      rs=0; 
+  87   1      P2=cmdword;
+  88   1      delay(5);
+  89   1      en=1;
+  90   1      delay(20);
+  91   1      en=0;
+  92   1      delay(10);
+  93   1      en=1;
+  94   1      delay(20);
+  95   1      }
+  96          
+  97            void lcd_data(uc databyte)
+  98          {
+  99   1      rs=1;
+ 100   1      P2=databyte;
+ 101   1      en=1;
+ 102   1      delay(20);
+ 103   1      en=0;
+ 104   1      delay(10);
+ 105   1      en=1;
+ 106   1      delay(20);
+ 107   1      }
+ 108          
+ 109          void sendString(uc *str)
+ 110          {
+ 111   1      delay(10);
+ 112   1      while(*str)
+ 113   1      {
+ 114   2      lcd_data(*str);
+ 115   2      delay(10);
+ 116   2      str++;
+C51 COMPILER V9.02   ADC123                                                                10/31/2012 00:34:09 PAGE 3   
+
+ 117   2      }
+ 118   1      }
+ 119          void delay(unsigned int k)
+ 120          {
+ 121   1      unsigned int i,j;
+ 122   1      for(i=0;i<k;i++)
+ 123   1      for(j=0;j<250;j++);
+ 124   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    354    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
